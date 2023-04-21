@@ -69,6 +69,8 @@ class handler(BaseHTTPRequestHandler):
                     output = file.read()
                     if output == '': 
                         raise Exception('The job with id ' + id + ' is not yet completed')
+                    if output.startswith('{"error"'):
+                        raise Exception('Error during the job execution: ' + json.loads(output).get('error', ''))
                     self.send_response(200)
                     self.end_headers()
                     self.wfile.write(bytes(output, 'utf8'))
